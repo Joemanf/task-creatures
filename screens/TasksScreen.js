@@ -24,7 +24,6 @@ const TasksScreen = () => {
     
     // Check for level up
     if (checkLevelUp) {
-      console.log('levelUp 2', creature.levelUp)
       setLevelUpCreature(creature);
     }
   };
