@@ -58,6 +58,7 @@ export const AppProvider = ({ children }) => {
     ));
     // Check for level up
     if (xp + creature.currentXP >= creature.xpToNextLevel) {
+      setCoins(coins+1)
       return true
     }
   };
