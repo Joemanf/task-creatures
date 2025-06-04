@@ -19,12 +19,12 @@ const TasksScreen = () => {
   };
 
   const handleComplete = () => {
-    completeTask(selectedTask.id);
+    const checkLevelUp = completeTask(selectedTask.id);
     setShowTaskModal(false);
     
     // Check for level up
-    if (creature.levelUp) {
-      console.log('levelUp', creature.levelUp)
+    if (checkLevelUp) {
+      console.log('levelUp 2', creature.levelUp)
       setLevelUpCreature(creature);
     }
   };
@@ -81,7 +81,7 @@ const TasksScreen = () => {
       <ConfirmationModal
         visible={!!levelUpCreature}
         onConfirm={() => setLevelUpCreature(null)}
-        title={`${levelUpCreature?.name} has just reached level ${levelUpCreature?.level}!`}
+        title={`${levelUpCreature?.name} has just reached level ${levelUpCreature?.level+1}!`}
         confirmText="Awesome!"
         showCancel={false}
       />

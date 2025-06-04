@@ -49,12 +49,17 @@ export const AppProvider = ({ children }) => {
     const xp = xpValues[task.difficulty];
     
     // Add XP to the selected creature
+    let creature = creatures.find(c => c.id === selectedCreature);
     addXP(selectedCreature, xp);
     
     // Mark task as completed
     setTasks(prevTasks => prevTasks.map(t => 
       t.id === taskId ? { ...t, completed: true } : t
     ));
+    // Check for level up
+    if (xp + creature.currentXP >= creature.xpToNextLevel) {
+      return true
+    }
   };
 
   const unlockCreature = (creatureId) => {
