@@ -36,7 +36,7 @@ const CreatureSelectionModal = ({ visible, creatureOptions, onSelect, onClose })
                   horizontal
                   renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => {}}>
-                      <CreatureCard creature={item} onPress={() => {onSelect(item.id)}} />  {/* Reuse CreatureCard, disable internal press */}
+                      <CreatureCard creature={item} onPress={() => {onSelect(item.id)}} />
                     </TouchableOpacity>
                   )}
                   style={styles.list}

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Modal, StyleSheet, Image } from 'react-native';
 import { useAppContext } from '../contexts/AppContext';
 import XPBar from '../components/XPBar';
@@ -6,12 +6,12 @@ import TaskItem from '../components/TaskItem';
 import ConfirmationModal from '../components/ConfirmationModal';
 
 const TasksScreen = () => {
-  const { creatureTemplates, tasks, selectedCreature, completeTask } = useAppContext();
+  const { ownedCreatures, tasks, selectedCreature, completeTask } = useAppContext();
   const [selectedTask, setSelectedTask] = useState(null);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [levelUpCreature, setLevelUpCreature] = useState(null);
 
-  const creature = creatureTemplates.find(c => c.id === selectedCreature);
+  const creature = ownedCreatures.find(c => c.id === selectedCreature);
 
   const handleTaskPress = (task) => {
     setSelectedTask(task);
@@ -32,14 +32,12 @@ const TasksScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Creature Display */}
       <View style={styles.creatureContainer}>
         <Text style={styles.levelText}>Lvl {creature.level}</Text>
         <Image source={creature.image} style={styles.creatureImage} />
         <XPBar currentXP={creature.currentXP} xpToNextLevel={creature.xpToNextLevel} />
       </View>
 
-      {/* Tasks List */}
       <FlatList
         data={activeTasks}
         keyExtractor={(item) => item.id.toString()}
@@ -49,7 +47,6 @@ const TasksScreen = () => {
         contentContainerStyle={styles.listContent}
       />
 
-      {/* Task Detail Modal */}
       <Modal visible={showTaskModal} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -76,7 +73,6 @@ const TasksScreen = () => {
         </View>
       </Modal>
 
-      {/* Level Up Modal */}
       <ConfirmationModal
         visible={!!levelUpCreature}
         onConfirm={() => setLevelUpCreature(null)}

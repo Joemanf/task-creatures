@@ -4,10 +4,10 @@ import { useAppContext } from '../contexts/AppContext';
 import XPBar from '../components/XPBar';
 
 const CreatureDetailScreen = ({ route, navigation }) => {
-  const { creatureTemplates } = useAppContext();
+  const { ownedCreatures } = useAppContext();
   const { ownedId } = route.params;
   
-  const creature = creatureTemplates.find(c => c.id === ownedId);
+  const creature = ownedCreatures.find(c => c.ownedId === ownedId);
   
   if (!creature) {
     return (
@@ -25,12 +25,10 @@ const CreatureDetailScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Creature Image */}
       <View style={styles.imageContainer}>
         <Image source={creature.image} style={styles.image} />
       </View>
       
-      {/* Scrollable Content */}
       <ScrollView 
         style={styles.contentContainer}
         contentContainerStyle={styles.scrollContent}
@@ -47,7 +45,6 @@ const CreatureDetailScreen = ({ route, navigation }) => {
         <Text style={styles.description}>{creature.description}</Text>
       </ScrollView>
       
-      {/* Close Button (fixed position) */}
       <TouchableOpacity 
         style={styles.closeButton}
         onPress={() => navigation.goBack()}
