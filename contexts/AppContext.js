@@ -101,7 +101,10 @@ export const AppProvider = ({ children }) => {
   // New: Function to unlock a new creature instance from a template
   const unlockNewCreature = (templateId) => {
     const template = creatureTemplates.find(c => c.id === templateId);
-    if (!template || coins < 10) return;
+    if (!template || coins < 10){
+      console.log('Error: Not enough coins!')
+      return
+    } 
     
     setCoins(coins - 10);
     setOwnedCreatures(prevOwned => [

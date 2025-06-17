@@ -20,6 +20,8 @@ const CreaturesScreen = ({ navigation }) => {
       const options = getRandomCreatureOptions();
       setCreatureOptions(options);
       setShowUnlockModal(true);
+    } else {
+      console.log('Error: Not enough coins!')
     }
   };
 
