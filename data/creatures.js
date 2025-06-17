@@ -7,6 +7,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "A friendly starter creature",
     unlocked: true,
+    rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -15,8 +16,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A rare creature",
+    description: "A common creature",
     unlocked: false,
+    rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -25,8 +27,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A rare creature",
+    description: "A common creature",
     unlocked: false,
+    rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -35,8 +38,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A rare creature",
+    description: "A common creature",
     unlocked: false,
+    rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -45,8 +49,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A rare creature",
+    description: "A common creature",
     unlocked: false,
+    rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -55,8 +60,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A rare creature",
+    description: "A common creature",
     unlocked: false,
+    rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -65,8 +71,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A rare creature",
+    description: "A common creature",
     unlocked: false,
+    rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -75,8 +82,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A rare creature",
+    description: "A common creature",
     unlocked: false,
+    rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -85,8 +93,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A rare creature",
+    description: "A common creature",
     unlocked: false,
+    rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -95,8 +104,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A rare creature",
+    description: "An uncommon creature",
     unlocked: false,
+    rarity: 'uncommon',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -105,8 +115,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A rare creature",
+    description: "An uncommon creature",
     unlocked: false,
+    rarity: 'uncommon',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -115,8 +126,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A rare creature",
+    description: "An uncommon creature",
     unlocked: false,
+    rarity: 'uncommon',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -125,8 +137,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A rare creature",
+    description: "An uncommon creature",
     unlocked: false,
+    rarity: 'uncommon',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -135,8 +148,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A rare creature",
+    description: "An uncommon creature",
     unlocked: false,
+    rarity: 'uncommon',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -145,8 +159,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A rare creature",
+    description: "An uncommon creature",
     unlocked: false,
+    rarity: 'uncommon',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -157,6 +172,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "A rare creature",
     unlocked: false,
+    rarity: 'rare',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -167,6 +183,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "A rare creature",
     unlocked: false,
+    rarity: 'rare',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -177,6 +194,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "A rare creature",
     unlocked: false,
+    rarity: 'rare',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -185,8 +203,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A rare creature",
+    description: "A epic creature",
     unlocked: false,
+    rarity: 'epic',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -195,8 +214,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A rare creature",
+    description: "A epic creature",
     unlocked: false,
+    rarity: 'epic',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -205,8 +225,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A rare creature",
+    description: "A common creature",
     unlocked: false,
+    rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
   {
@@ -215,8 +236,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A rare creature",
+    description: "A common creature",
     unlocked: false,
+    rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
 ];
