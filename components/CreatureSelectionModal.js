@@ -35,8 +35,8 @@ const CreatureSelectionModal = ({ visible, creatureOptions, onSelect, onClose })
                   keyExtractor={(item) => item.id.toString()}
                   horizontal
                   renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => onSelect(item.id)}>
-                      <CreatureCard creature={item} onPress={() => {}} />  {/* Reuse CreatureCard, disable internal press */}
+                    <TouchableOpacity onPress={() => {}}>
+                      <CreatureCard creature={item} onPress={() => {onSelect(item.id)}} />  {/* Reuse CreatureCard, disable internal press */}
                     </TouchableOpacity>
                   )}
                   style={styles.list}

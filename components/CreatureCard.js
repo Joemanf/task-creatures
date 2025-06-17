@@ -3,12 +3,12 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
 const CreatureCard = ({ creature, onPress }) => {
   return (
-    <TouchableOpacity onPress={() => onPress(creature)} style={styles.container}>
-      <View style={styles.imageContainer}>  {/* Updated: No locked styles, as owned are unlocked */}
+    <TouchableOpacity onPress={onPress} style={styles.container}>
+      <View style={styles.imageContainer}> 
         <Image source={creature.image} style={styles.image} />
       </View>
       <Text style={styles.name}>{creature.name}</Text>
-      <Text style={styles.level}>Lv. {creature.level}</Text>  {/* Updated: Always show level for owned */}
+      <Text style={styles.level}>Lv. {creature.level}</Text>
     </TouchableOpacity>
   );
 };

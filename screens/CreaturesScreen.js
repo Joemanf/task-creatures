@@ -27,7 +27,6 @@ const CreaturesScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.coins}>Coins: {coins}</Text>
       
-      {/* New: Unlock button */}
       <TouchableOpacity
         style={[styles.unlockButton, coins < 10 && styles.disabledButton]}
         onPress={handleUnlockPress}
@@ -53,7 +52,6 @@ const CreaturesScreen = ({ navigation }) => {
         />
       )}
       
-      {/* New: Creature selection modal */}
       <CreatureSelectionModal
         visible={showUnlockModal}
         creatureOptions={creatureOptions}
