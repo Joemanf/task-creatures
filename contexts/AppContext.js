@@ -1,12 +1,12 @@
 import React, { createContext, useState, useContext } from 'react';
-import { creatures as creatureTemplates } from '../data/creatures';  // Renamed for clarity as templates
+import { creatures } from '../data/creatures';  // Renamed for clarity as templates
 import { initialTasks } from '../data/tasks';
 
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   // All of these should be grabbed from the backend eventually
-  const [creatureTemplates, setCreatureTemplates] = useState(creatureTemplates);  // Renamed: Static list of creature templates
+  const [creatureTemplates, setCreatureTemplates] = useState(creatures);  // Renamed: Static list of creature templates
   const [ownedCreatures, setOwnedCreatures] = useState([  // New state: User's owned creatures, supporting duplicates
     {
       ...creatureTemplates[0],  // Copy from template
@@ -15,7 +15,7 @@ export const AppProvider = ({ children }) => {
     }
   ]);
   const [tasks, setTasks] = useState(initialTasks);
-  const [coins, setCoins] = useState(0);
+  const [coins, setCoins] = useState(10);
   const [selectedCreature, setSelectedCreature] = useState(1);  // Updated: Now references ownedId (starts with first owned)
 
   const addXP = (ownedId, xp) => {  // Updated: Use ownedId instead of template ID
