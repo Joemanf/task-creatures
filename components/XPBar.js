@@ -17,7 +17,9 @@ const XPBar = ({ currentXP, xpToNextLevel }) => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    paddingVertical: 5,
+    // paddingVertical: -5,
+    marginVertical: 5,
+    zIndex: 2,
   },
   backgroundBar: {
     height: 10,

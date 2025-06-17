@@ -94,16 +94,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   creatureContainer: {
-    height: '30%',
+    height: '31%',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#f5f5f5',
     padding: 20,
   },
   creatureImage: {
-    width: 150,
-    height: 150,
+    // width: 250,
+    // height: 250,
+    width: '120%',
+    height: '120%',
     resizeMode: 'contain',
+    zIndex: 1,
+    marginTop: 40,
   },
   levelText: {
     position: 'absolute',
@@ -111,6 +115,7 @@ const styles = StyleSheet.create({
     left: 10,
     fontSize: 18,
     fontWeight: 'bold',
+    zIndex: 2,
   },
   listContent: {
     padding: 10,
