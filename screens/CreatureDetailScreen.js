@@ -4,10 +4,10 @@ import { useAppContext } from '../contexts/AppContext';
 import XPBar from '../components/XPBar';
 
 const CreatureDetailScreen = ({ route, navigation }) => {
-  const { creatures } = useAppContext();
+  const { ownedCreatures } = useAppContext();
   const { creatureId } = route.params;
   
-  const creature = creatures.find(c => c.id === creatureId);
+  const creature = ownedCreatures.find(c => c.id === creatureId);
   
   if (!creature) {
     return (

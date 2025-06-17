@@ -6,12 +6,16 @@ import TaskItem from '../components/TaskItem';
 import ConfirmationModal from '../components/ConfirmationModal';
 
 const TasksScreen = () => {
-  const { creatures, tasks, selectedCreature, completeTask } = useAppContext();
+  const { ownedCreatures, tasks, selectedCreature, completeTask } = useAppContext();
   const [selectedTask, setSelectedTask] = useState(null);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [levelUpCreature, setLevelUpCreature] = useState(null);
 
-  const creature = creatures.find(c => c.id === selectedCreature);
+  console.log('ownedCreatures', ownedCreatures, selectedCreature)
+
+  const creature = ownedCreatures.find(c => c.id === selectedCreature);
+
+  console.log('creature', creature)
 
   const handleTaskPress = (task) => {
     setSelectedTask(task);
