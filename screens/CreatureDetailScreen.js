@@ -5,9 +5,9 @@ import XPBar from '../components/XPBar';
 
 const CreatureDetailScreen = ({ route, navigation }) => {
   const { creatures } = useAppContext();
-  const { creatureId } = route.params;
+  const { ownedId } = route.params;
   
-  const creature = creatures.find(c => c.id === creatureId);
+  const creature = creatures.find(c => c.id === ownedId);
   
   if (!creature) {
     return (

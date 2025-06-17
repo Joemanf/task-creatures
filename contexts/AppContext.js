@@ -1,20 +1,27 @@
 import React, { createContext, useState, useContext } from 'react';
-import { creatures as initialCreatures } from '../data/creatures';
+import { creatures as creatureTemplates } from '../data/creatures';  // Renamed for clarity as templates
 import { initialTasks } from '../data/tasks';
 
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   // All of these should be grabbed from the backend eventually
-  const [creatures, setCreatures] = useState(initialCreatures);
+  const [creatureTemplates, setCreatureTemplates] = useState(creatureTemplates);  // Renamed: Static list of creature templates
+  const [ownedCreatures, setOwnedCreatures] = useState([  // New state: User's owned creatures, supporting duplicates
+    {
+      ...creatureTemplates[0],  // Copy from template
+      ownedId: 1,  // Unique ID for this owned instance
+      unlocked: true  // All owned are unlocked
+    }
+  ]);
   const [tasks, setTasks] = useState(initialTasks);
   const [coins, setCoins] = useState(0);
-  const [selectedCreature, setSelectedCreature] = useState(initialCreatures[0].id);
+  const [selectedCreature, setSelectedCreature] = useState(1);  // Updated: Now references ownedId (starts with first owned)
 
-  const addXP = (creatureId, xp) => {
-    setCreatures(prevCreatures => {
-      return prevCreatures.map(creature => {
-        if (creature.id === creatureId) {
+  const addXP = (ownedId, xp) => {  // Updated: Use ownedId instead of template ID
+    setOwnedCreatures(prevOwned => {
+      return prevOwned.map(creature => {
+        if (creature.ownedId === ownedId) {
           const newXP = creature.currentXP + xp;
           let newLevel = creature.level;
           let xpToNextLevel = creature.xpToNextLevel;
@@ -29,7 +36,7 @@ export const AppProvider = ({ children }) => {
           
           return {
             ...creature,
-            currentXP: newXP >= xpToNextLevel ? newXP - oldXP : newXP, // Old code: newXP >= xpToNextLevel ? 0 : newXP,
+            currentXP: newXP >= xpToNextLevel ? newXP - oldXP : newXP,
             level: newLevel,
             xpToNextLevel,
             levelUp
@@ -41,36 +48,73 @@ export const AppProvider = ({ children }) => {
   };
 
   const completeTask = (taskId) => {
-    // Find the task and get its XP value
+    // ... existing code ... (unchanged, except below)
     const task = tasks.find(t => t.id === taskId);
     if (!task) return;
     
     const xpValues = { easy: 1, medium: 2, hard: 3 };
     const xp = xpValues[task.difficulty];
     
-    // Add XP to the selected creature
-    let creature = creatures.find(c => c.id === selectedCreature);
-    addXP(selectedCreature, xp);
+    // Updated: Find by ownedId and add XP to owned creature
+    const creature = ownedCreatures.find(c => c.ownedId === selectedCreature);
+    if (creature) {
+      addXP(selectedCreature, xp);  // Use ownedId
+    }
     
     // Mark task as completed
     setTasks(prevTasks => prevTasks.map(t => 
       t.id === taskId ? { ...t, completed: true } : t
     ));
-    // Check for level up
-    if (xp + creature.currentXP >= creature.xpToNextLevel) {
-      setCoins(coins+1)
-      return true
+    
+    // Check for level up (updated to use owned creature)
+    if (creature && xp + creature.currentXP >= creature.xpToNextLevel) {
+      setCoins(coins + 1);
+      return true;
     }
   };
 
-  const unlockCreature = (creatureId) => {
-    const creature = creatures.find(c => c.id === creatureId);
-    if (!creature || coins < 10) return;
+  // Removed: unlockCreature (replaced by unlockNewCreature below)
+
+  // New: Function to get random creature templates based on rarity probabilities
+  const getRandomCreatureOptions = (count = 3) => {
+    const getRarity = () => {
+      const rand = Math.random();
+      if (rand < 0.01) return 'epic';      // 1%
+      if (rand < 0.06) return 'rare';      // 5% (cumulative: 0.01 to 0.06)
+      if (rand < 0.26) return 'uncommon';  // 20% (cumulative: 0.06 to 0.26)
+      return 'common';                     // 74%
+    };
+
+    const options = [];
+    for (let i = 0; i < count; i++) {
+      const rarity = getRarity();
+      let candidates = creatureTemplates.filter(c => c.rarity === rarity);
+      if (candidates.length === 0) {
+        candidates = creatureTemplates.filter(c => c.rarity === 'common');  // Fallback
+      }
+      const selected = candidates[Math.floor(Math.random() * candidates.length)];
+      if (selected) options.push(selected);
+    }
+    return options;
+  };
+
+  // New: Function to unlock a new creature instance from a template
+  const unlockNewCreature = (templateId) => {
+    const template = creatureTemplates.find(c => c.id === templateId);
+    if (!template || coins < 10) return;
     
     setCoins(coins - 10);
-    setCreatures(prevCreatures => prevCreatures.map(c => 
-      c.id === creatureId ? { ...c, unlocked: true } : c
-    ));
+    setOwnedCreatures(prevOwned => [
+      ...prevOwned,
+      {
+        ...template,  // Copy template data
+        ownedId: Date.now(),  // Unique ID for this instance
+        level: 1,             // Reset to starting level
+        currentXP: 0,
+        xpToNextLevel: 10,
+        unlocked: true
+      }
+    ]);
   };
 
   const createTask = (newTask) => {
@@ -87,13 +131,15 @@ export const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
-        creatures,
+        creatureTemplates,  // Expose templates if needed elsewhere
+        ownedCreatures,     // New: Expose owned creatures
         tasks,
         coins,
-        selectedCreature,
+        selectedCreature,   // Updated: ownedId
         setSelectedCreature,
         completeTask,
-        unlockCreature,
+        unlockNewCreature,  // New
+        getRandomCreatureOptions,  // New
         createTask
       }}
     >

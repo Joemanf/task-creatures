@@ -1,27 +1,25 @@
 import React, { useState, useContext } from 'react';
-import { View, FlatList, Text, StyleSheet } from 'react-native';
+import { View, FlatList, Text, StyleSheet, TouchableOpacity } from 'react-native';  // Added TouchableOpacity for button
 import { useAppContext } from '../contexts/AppContext';
 import CreatureCard from '../components/CreatureCard';
-import ConfirmationModal from '../components/ConfirmationModal';
+import CreatureSelectionModal from '../components/CreatureSelectionModal';  // New import for modal
 
 const CreaturesScreen = ({ navigation }) => {
-  const { creatures, coins, unlockCreature } = useAppContext();
-  const [selectedCreature, setSelectedCreature] = useState(null);
-  const [showUnlockModal, setShowUnlockModal] = useState(false);
+  const { ownedCreatures, coins, unlockNewCreature, getRandomCreatureOptions } = useAppContext();  // Updated: Use ownedCreatures and new functions
+  const [showUnlockModal, setShowUnlockModal] = useState(false);  // New: For new unlock modal
+  const [creatureOptions, setCreatureOptions] = useState([]);    // New: Holds 3 random options
 
+  // Updated: Only handle owned creatures (no unlock logic needed here)
   const handleCreaturePress = (creature) => {
-    if (creature.unlocked) {
-      navigation.navigate('CreatureDetail', { creatureId: creature.id });
-    } else {
-      setSelectedCreature(creature);
-      setShowUnlockModal(true);
-    }
+    navigation.navigate('CreatureDetail', { ownedId: creature.ownedId });  // Updated: Pass ownedId
   };
 
-  const handleUnlock = () => {
-    if (selectedCreature) {
-      unlockCreature(selectedCreature.id);
-      setShowUnlockModal(false);
+  // New: Handle unlock button press
+  const handleUnlockPress = () => {
+    if (coins >= 10) {
+      const options = getRandomCreatureOptions();
+      setCreatureOptions(options);
+      setShowUnlockModal(true);
     }
   };
 
@@ -29,26 +27,41 @@ const CreaturesScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.coins}>Coins: {coins}</Text>
       
-      <FlatList
-        data={creatures}
-        keyExtractor={(item) => item.id.toString()}
-        numColumns={3}
-        contentContainerStyle={styles.listContent}
-        renderItem={({ item }) => (
-          <CreatureCard 
-            creature={item} 
-            onPress={() => handleCreaturePress(item)} 
-          />
-        )}
-      />
+      {/* New: Unlock button */}
+      <TouchableOpacity
+        style={[styles.unlockButton, coins < 10 && styles.disabledButton]}
+        onPress={handleUnlockPress}
+        disabled={coins < 10}
+      >
+        <Text style={styles.unlockButtonText}>Unlock New Creature (10 coins)</Text>
+      </TouchableOpacity>
       
-      <ConfirmationModal
+      {ownedCreatures.length === 0 ? (  // New: Placeholder if no owned creatures
+        <Text style={styles.noCreatures}>You don't own any creatures yet. Unlock some!</Text>
+      ) : (
+        <FlatList
+          data={ownedCreatures}  // Updated: Use ownedCreatures
+          keyExtractor={(item) => item.ownedId.toString()}  // Updated: Use ownedId
+          numColumns={3}
+          contentContainerStyle={styles.listContent}
+          renderItem={({ item }) => (
+            <CreatureCard 
+              creature={item}  // Passes owned creature data
+              onPress={() => handleCreaturePress(item)} 
+            />
+          )}
+        />
+      )}
+      
+      {/* New: Creature selection modal */}
+      <CreatureSelectionModal
         visible={showUnlockModal}
+        creatureOptions={creatureOptions}
+        onSelect={(templateId) => {
+          unlockNewCreature(templateId);
+          setShowUnlockModal(false);
+        }}
         onClose={() => setShowUnlockModal(false)}
-        onConfirm={handleUnlock}
-        title={`Unlock ${selectedCreature?.name}?`}
-        confirmText={`Unlock (10 coins)`}
-        confirmDisabled={coins < 10}
       />
     </View>
   );
@@ -68,6 +81,26 @@ const styles = StyleSheet.create({
   },
   listContent: {
     alignItems: 'center',
+  },
+  unlockButton: {  // New styles for button
+    backgroundColor: '#4CAF50',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  unlockButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  disabledButton: {
+    backgroundColor: '#CCCCCC',
+  },
+  noCreatures: {  // New style for placeholder
+    textAlign: 'center',
+    fontSize: 16,
+    margin: 20,
+    color: '#666',
   },
 });
 
