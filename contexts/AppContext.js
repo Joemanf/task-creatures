@@ -1,20 +1,31 @@
 import React, { createContext, useState, useContext } from 'react';
-import { creatures as initialCreatures } from '../data/creatures';
+import { creatures as availableCreatures } from '../data/creatures';
 import { initialTasks } from '../data/tasks';
 
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   // All of these should be grabbed from the backend eventually
-  const [creatures, setCreatures] = useState(initialCreatures);
+  const [availableCreatures, setAvailableCreatures] = useState(availableCreatures);
+  const [ownedCreatures, setOwnedCreatures] = useState([
+    // Start with one creature
+    {
+      id: Date.now(),
+      creatureId: 1,
+      level: 1,
+      currentXP: 0,
+      xpToNextLevel: 10,
+      levelUp: false
+    }
+  ]);
   const [tasks, setTasks] = useState(initialTasks);
-  const [coins, setCoins] = useState(0);
-  const [selectedCreature, setSelectedCreature] = useState(initialCreatures[0].id);
+  const [coins, setCoins] = useState(50); // Start with some coins for testing
+  const [selectedCreature, setSelectedCreature] = useState(null);
 
-  const addXP = (creatureId, xp) => {
-    setCreatures(prevCreatures => {
+  const addXP = (ownedCreatureId, xp) => {
+    setOwnedCreatures(prevCreatures => {
       return prevCreatures.map(creature => {
-        if (creature.id === creatureId) {
+        if (creature.id === ownedCreatureId) {
           const newXP = creature.currentXP + xp;
           let newLevel = creature.level;
           let xpToNextLevel = creature.xpToNextLevel;
@@ -49,28 +60,70 @@ export const AppProvider = ({ children }) => {
     const xp = xpValues[task.difficulty];
     
     // Add XP to the selected creature
-    let creature = creatures.find(c => c.id === selectedCreature);
-    addXP(selectedCreature, xp);
+    let creature = ownedCreatures.find(c => c.id === selectedCreature);
+    if (creature) {
+      addXP(selectedCreature, xp);
+    }
     
     // Mark task as completed
     setTasks(prevTasks => prevTasks.map(t => 
       t.id === taskId ? { ...t, completed: true } : t
     ));
     // Check for level up
-    if (xp + creature.currentXP >= creature.xpToNextLevel) {
+    if (creature && xp + creature.currentXP >= creature.xpToNextLevel) {
       setCoins(coins+1)
       return true
     }
+  }
+
+  const generateRandomCreatures = () => {
+    const rarityRolls = [
+      { rarity: 'common', chance: 74 },
+      { rarity: 'uncommon', chance: 20 },
+      { rarity: 'rare', chance: 5 },
+      { rarity: 'epic', chance: 1 }
+    ];
+
+    const rollRarity = () => {
+      const roll = Math.random() * 100;
+      let cumulative = 0;
+      for (const { rarity, chance } of rarityRolls) {
+        cumulative += chance;
+        if (roll <= cumulative) return rarity;
+      }
+      return 'common'; // fallback
+    };
+
+    const getRandomCreatureByRarity = (rarity) => {
+      const creaturesOfRarity = availableCreatures.filter(c => c.rarity === rarity);
+      return creaturesOfRarity[Math.floor(Math.random() * creaturesOfRarity.length)];
+    };
+
+    return Array.from({ length: 3 }, () => {
+      const rarity = rollRarity();
+      return getRandomCreatureByRarity(rarity);
+    });
   };
 
   const unlockCreature = (creatureId) => {
-    const creature = creatures.find(c => c.id === creatureId);
-    if (!creature || coins < 10) return;
+    if (coins < 10) return false;
+    
+    const baseCreature = availableCreatures.find(c => c.id === creatureId);
+    if (!baseCreature) return false;
     
     setCoins(coins - 10);
-    setCreatures(prevCreatures => prevCreatures.map(c => 
-      c.id === creatureId ? { ...c, unlocked: true } : c
-    ));
+    
+    const newOwnedCreature = {
+      id: Date.now() + Math.random(), // Ensure unique ID
+      creatureId: baseCreature.id,
+      level: 1,
+      currentXP: 0,
+      xpToNextLevel: 10,
+      levelUp: false
+    };
+    
+    setOwnedCreatures(prev => [...prev, newOwnedCreature]);
+    return true;
   };
 
   const createTask = (newTask) => {
@@ -87,13 +140,15 @@ export const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
-        creatures,
+        availableCreatures,
+        ownedCreatures,
         tasks,
         coins,
         selectedCreature,
         setSelectedCreature,
         completeTask,
         unlockCreature,
+        generateRandomCreatures,
         createTask
       }}
     >
