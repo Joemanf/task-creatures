@@ -73,8 +73,6 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Removed: unlockCreature (replaced by unlockNewCreature below)
-
   // New: Function to get random creature templates based on rarity probabilities
   const getRandomCreatureOptions = (count = 3) => {
     const getRarity = () => {
@@ -120,6 +118,19 @@ export const AppProvider = ({ children }) => {
     ]);
   };
 
+  const setActiveCreature = (oId) => {
+    setSelectedCreature(oId);
+    const tempCreatures = []
+    for (let i = 0; i < ownedCreatures.length; i++) {
+      if (ownedCreatures[i].ownedId === oId) {
+        tempCreatures.unshift(ownedCreatures[i])
+      } else {
+        tempCreatures.push(ownedCreatures[i])
+      }
+    }
+    setOwnedCreatures(tempCreatures)
+  }
+
   const createTask = (newTask) => {
     setTasks(prevTasks => [
       ...prevTasks,
@@ -142,6 +153,7 @@ export const AppProvider = ({ children }) => {
         setSelectedCreature,
         completeTask,
         unlockNewCreature,  // New
+        setActiveCreature,
         getRandomCreatureOptions,  // New
         createTask
       }}

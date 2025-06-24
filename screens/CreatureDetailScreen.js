@@ -4,14 +4,14 @@ import { useAppContext } from '../contexts/AppContext';
 import XPBar from '../components/XPBar';
 
 const CreatureDetailScreen = ({ route, navigation }) => {
-  const { ownedCreatures, selectedCreature, setSelectedCreature } = useAppContext();
+  const { ownedCreatures, selectedCreature, setSelectedCreature, setActiveCreature } = useAppContext();
   const { ownedId } = route.params;
   
   const creature = ownedCreatures.find(c => c.ownedId === ownedId);
 
   const setActive = () => {
-    setSelectedCreature(ownedId);
-    navigation.goBack()
+    setActiveCreature(ownedId);
+    navigation.goBack();
     navigation.navigate('Tasks');
   }
   

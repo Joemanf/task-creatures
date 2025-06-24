@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, FlatList, Text, StyleSheet, TouchableOpacity } from 'react-native';  // Added TouchableOpacity for button
 import { useAppContext } from '../contexts/AppContext';
 import CreatureCard from '../components/CreatureCard';
@@ -8,7 +8,7 @@ const CreaturesScreen = ({ navigation }) => {
   const { ownedCreatures, coins, unlockNewCreature, getRandomCreatureOptions } = useAppContext();  // Updated: Use ownedCreatures and new functions
   const [showUnlockModal, setShowUnlockModal] = useState(false);  // New: For new unlock modal
   const [creatureOptions, setCreatureOptions] = useState([]);    // New: Holds 3 random options
-
+  
   // Updated: Only handle owned creatures (no unlock logic needed here)
   const handleCreaturePress = (creature) => {
     navigation.navigate('CreatureDetail', { ownedId: creature.ownedId });  // Updated: Pass ownedId
