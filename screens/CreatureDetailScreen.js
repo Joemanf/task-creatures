@@ -4,10 +4,16 @@ import { useAppContext } from '../contexts/AppContext';
 import XPBar from '../components/XPBar';
 
 const CreatureDetailScreen = ({ route, navigation }) => {
-  const { ownedCreatures } = useAppContext();
+  const { ownedCreatures, selectedCreature, setSelectedCreature } = useAppContext();
   const { ownedId } = route.params;
   
   const creature = ownedCreatures.find(c => c.ownedId === ownedId);
+
+  const setActive = () => {
+    setSelectedCreature(ownedId);
+    navigation.goBack()
+    navigation.navigate('Tasks');
+  }
   
   if (!creature) {
     return (
@@ -43,6 +49,14 @@ const CreatureDetailScreen = ({ route, navigation }) => {
         />
         
         <Text style={styles.description}>{creature.description}</Text>
+
+        <TouchableOpacity 
+          style={[styles.button, styles.createButton, selectedCreature === creature.ownedId && styles.disabledButton]}
+          onPress={setActive}
+          disabled={selectedCreature === creature.ownedId}
+        >
+          <Text style={styles.buttonText}>Switch to Active</Text>
+        </TouchableOpacity>
       </ScrollView>
       
       <TouchableOpacity 
@@ -115,6 +129,24 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 24,
     fontWeight: 'bold',
+  },
+  button: {
+    flex: 1,
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  createButton: {
+    backgroundColor: '#4CAF50',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  disabledButton: {
+    backgroundColor: '#CCCCCC',
   },
 });
 

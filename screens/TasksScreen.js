@@ -11,7 +11,7 @@ const TasksScreen = () => {
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [levelUpCreature, setLevelUpCreature] = useState(null);
 
-  const creature = ownedCreatures.find(c => c.id === selectedCreature);
+  const creature = ownedCreatures.find(c => c.ownedId === selectedCreature);
 
   const handleTaskPress = (task) => {
     setSelectedTask(task);
