@@ -1,19 +1,13 @@
-import React, { useContext } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useAppContext } from '../contexts/AppContext';
 import XPBar from '../components/XPBar';
 
 const CreatureDetailScreen = ({ route, navigation }) => {
-  const { ownedCreatures, selectedCreature, setActiveCreature } = useAppContext();
+  const { ownedCreatures, selectedCreature, setActiveCreature, evolveCreature, coins, creatureTemplates } = useAppContext();
   const { ownedId } = route.params;
   
   const creature = ownedCreatures.find(c => c.ownedId === ownedId);
-
-  const setActive = () => {
-    setActiveCreature(ownedId);
-    navigation.goBack();
-    navigation.navigate('Tasks');
-  }
   
   if (!creature) {
     return (
@@ -28,6 +22,67 @@ const CreatureDetailScreen = ({ route, navigation }) => {
       </View>
     );
   }
+
+  const handleEvolve = (newTemplateId) => {
+    const newTemplate = creatureTemplates.find(c => c.id === newTemplateId);
+    if (!newTemplate) return;
+    
+    Alert.alert(
+      'Evolve Creature',
+      `Grow ${creature.name} into ${newTemplate.name}?`,
+      [
+        {
+          text: 'No',
+          style: 'cancel'
+        },
+        {
+          text: 'Yes',
+          onPress: () => {
+            evolveCreature(ownedId, newTemplateId);
+            // Navigate to evolution reveal screen
+            navigation.navigate('EvolutionReveal', { creature: { ...newTemplate, ownedId } });
+          }
+        }
+      ]
+    );
+  };
+
+  const renderEvolutionOption = (option) => {
+    const newTemplate = creatureTemplates.find(c => c.id === option.id);
+    if (!newTemplate) return null;
+    
+    const levelMet = creature.level >= option.requiredLevel;
+    const coinsMet = coins >= option.coinCost;
+    const canEvolve = levelMet && coinsMet;
+    
+    return (
+      <TouchableOpacity 
+        key={option.id}
+        style={[styles.evolveButton, !canEvolve && styles.disabledButton]}
+        onPress={() => canEvolve && handleEvolve(option.id)}
+        disabled={!canEvolve}
+      >
+        <View style={styles.evolveLeft}>
+          <Image source={newTemplate.image} style={styles.evolveImage} />
+          <Text style={styles.evolveText}>GROW</Text>
+        </View>
+        <View style={styles.evolveRight}>
+          <View style={styles.requirement}>
+            <Text style={styles.requirementLabel}>LVL</Text>
+            <Text style={[styles.requirementValue, !levelMet && styles.requirementUnmet]}>
+              {option.requiredLevel}
+            </Text>
+          </View>
+          <View style={styles.requirement}>
+            <Text style={styles.requirementLabel}>💰</Text>
+            <Text style={[styles.requirementValue, !coinsMet && styles.requirementUnmet]}>
+              {option.coinCost}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -49,6 +104,13 @@ const CreatureDetailScreen = ({ route, navigation }) => {
         />
         
         <Text style={styles.description}>{creature.description}</Text>
+      
+        {creature.growsTo && creature.growsTo.length > 0 && (
+          <View style={styles.evolutionSection}>
+            <Text style={styles.sectionTitle}>Evolution Options</Text>
+            {creature.growsTo.map(renderEvolutionOption)}
+          </View>
+        )}
 
         <TouchableOpacity 
           style={[styles.button, styles.createButton, selectedCreature === creature.ownedId && styles.disabledButton]}
@@ -147,6 +209,64 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     backgroundColor: '#CCCCCC',
+  },
+    evolutionSection: {
+    marginTop: 20,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  evolveButton: {
+    flexDirection: 'row',
+    borderRadius: 8,
+    marginBottom: 10,
+    overflow: 'hidden',
+  },
+  evolveLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#2E7D32', // Darker green
+    padding: 10,
+  },
+  evolveImage: {
+    width: 40,
+    height: 40,
+    marginRight: 10,
+  },
+  evolveText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  evolveRight: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#4CAF50', // Lighter green
+    padding: 10,
+  },
+  requirement: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  requirementLabel: {
+    marginRight: 5,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  requirementValue: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  requirementUnmet: {
+    color: '#F44336',
+  },
+  disabledButton: {
+    opacity: 0.7,
   },
 });
 
