@@ -142,6 +142,35 @@ export const AppProvider = ({ children }) => {
     ]);
   };
 
+  const evolveCreature = (ownedId, newTemplateId, coinCost) => {
+    const ownedCreature = ownedCreatures.find(c => c.ownedId === ownedId);
+    const newTemplate = creatureTemplates.find(c => c.id === newTemplateId);
+    
+    if (!ownedCreature || !newTemplate || coins < coinCost) {
+      return false;
+    }
+
+    setCoins(coins - coinCost);
+    
+    setOwnedCreatures(prevOwned => {
+      return prevOwned.map(creature => {
+        if (creature.ownedId === ownedId) {
+          return {
+            ...newTemplate,
+            ownedId: creature.ownedId, // Keep the same owned ID
+            level: creature.level, // Retain level
+            currentXP: creature.currentXP, // Retain XP
+            xpToNextLevel: creature.xpToNextLevel, // Retain XP progress
+            unlocked: true
+          };
+        }
+        return creature;
+      });
+    });
+
+    return true;
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -155,7 +184,8 @@ export const AppProvider = ({ children }) => {
         unlockNewCreature,  // New
         setActiveCreature,
         getRandomCreatureOptions,  // New
-        createTask
+        createTask,
+        evolveCreature
       }}
     >
       {children}

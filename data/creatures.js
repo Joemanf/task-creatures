@@ -5,7 +5,10 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    growsTo: [21, 22],
+    evolutions: [
+      { id: 21, requiredLevel: 2, coinCost: 5 },
+      { id: 22, requiredLevel: 2, coinCost: 8 }
+    ],
     description: "A friendly starter creature",
     unlocked: true,
     canPurchase: true,
