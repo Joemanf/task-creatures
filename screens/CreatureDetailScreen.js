@@ -33,8 +33,7 @@ const CreatureDetailScreen = ({ route, navigation }) => {
           onPress: () => {
             const success = evolveCreature(ownedId, evolutionOption.id, evolutionOption.coinCost);
             if (success) {
-              const updatedCreature = ownedCreatures.find(c => c.ownedId === ownedId);
-              setEvolvedCreature({...newTemplate, ...updatedCreature});
+              setEvolvedCreature(newTemplate);
               setShowEvolutionSuccess(true);
             }
           }
@@ -262,7 +261,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#4CAF50',
     padding: 15,
     justifyContent: 'center',
-    minWidth: 100,
+    minWidth: 210,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
   evolutionImage: {
     width: 40,

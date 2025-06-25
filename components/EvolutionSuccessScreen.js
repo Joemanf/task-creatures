@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 100,
+    marginBottom: 200,
     paddingHorizontal: 20,
   },
   closeButton: {
