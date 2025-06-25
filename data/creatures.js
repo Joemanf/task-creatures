@@ -6,8 +6,8 @@ export const creatures = [
     currentXP: 0,
     xpToNextLevel: 10,
     growsTo: [
-      { id: 21, requiredLevel: 2, coinCost: 20 },
-      { id: 22, requiredLevel: 2, coinCost: 20 }
+      { targetId: 21, requiredLevel: 2, coinCost: 20 },
+      { targetId: 22, requiredLevel: 2, coinCost: 20 }
     ],
     description: "A friendly starter creature",
     unlocked: true,

@@ -15,7 +15,7 @@ export const AppProvider = ({ children }) => {
     }
   ]);
   const [tasks, setTasks] = useState(initialTasks);
-  const [coins, setCoins] = useState(10);
+  const [coins, setCoins] = useState(100);
   const [selectedCreature, setSelectedCreature] = useState(1);  // Updated: Now references ownedId (starts with first owned)
 
   const addXP = (ownedId, xp) => {  // Updated: Use ownedId instead of template ID
@@ -96,40 +96,43 @@ export const AppProvider = ({ children }) => {
     return options;
   };
 
-  const evolveCreature = (ownedId, newTemplateId) => {
-    const template = creatureTemplates.find(c => c.id === newTemplateId);
-    if (!template) return;
+  const evolveCreature = (ownedId, evolutionOption) => {
+    const creatureToEvolve = ownedCreatures.find(c => c.ownedId === ownedId);
+    const targetTemplate = creatureTemplates.find(c => c.id === evolutionOption.targetId);
     
+    if (!creatureToEvolve || !targetTemplate) return null;
+    
+    // Check requirements
+    if (creatureToEvolve.level < evolutionOption.requiredLevel || coins < evolutionOption.coinCost) {
+      return null; // Requirements not met
+    }
+    
+    // Deduct coins
+    setCoins(prevCoins => prevCoins - evolutionOption.coinCost);
+    
+    // Create new evolved creature with same level
+    const newOwnedId = Date.now();
+    const evolvedCreature = {
+      ...targetTemplate,
+      ownedId: newOwnedId,
+      level: creatureToEvolve.level, // Retain level
+      currentXP: 0,
+      xpToNextLevel: 10,
+      unlocked: true
+    };
+    
+    // Update owned creatures: remove old, add new
     setOwnedCreatures(prevOwned => {
-      return prevOwned.map(creature => {
-        if (creature.ownedId === ownedId) {
-          // Check if this evolution is allowed for this creature
-          const evolutionOption = creature.growsTo?.find(opt => opt.id === newTemplateId);
-          if (!evolutionOption) return creature;
-          
-          // Check requirements
-          if (creature.level < evolutionOption.requiredLevel || coins < evolutionOption.coinCost) {
-            return creature;
-          }
-          
-          // Deduct coins
-          setCoins(prevCoins => prevCoins - evolutionOption.coinCost);
-          
-          // Create evolved creature with preserved level and XP
-          return {
-            ...template,
-            ownedId: creature.ownedId, // Keep the same ownedId
-            level: creature.level,
-            currentXP: creature.currentXP,
-            xpToNextLevel: creature.xpToNextLevel,
-            unlocked: true
-          };
-        }
-        return creature;
-      });
+      const updated = prevOwned.filter(c => c.ownedId !== ownedId);
+      return [...updated, evolvedCreature];
     });
     
-    // If this was the active creature, keep it active (same ownedId)
+    // If this was the active creature, make the new one active
+    if (selectedCreature === ownedId) {
+      setSelectedCreature(newOwnedId);
+    }
+    
+    return evolvedCreature;
   };
 
   // New: Function to unlock a new creature instance from a template

@@ -4,10 +4,46 @@ import { useAppContext } from '../contexts/AppContext';
 import XPBar from '../components/XPBar';
 
 const CreatureDetailScreen = ({ route, navigation }) => {
-  const { ownedCreatures, selectedCreature, setActiveCreature, evolveCreature, coins, creatureTemplates } = useAppContext();
+  const { ownedCreatures, selectedCreature, setActiveCreature, creatureTemplates, coins, evolveCreature } = useAppContext();
   const { ownedId } = route.params;
   
   const creature = ownedCreatures.find(c => c.ownedId === ownedId);
+  const creatureTemplate = creatureTemplates.find(c => c.id === creature.id);
+
+  const setActive = () => {
+    setActiveCreature(ownedId);
+    navigation.goBack();
+    navigation.navigate('Tasks');
+  }
+
+  const handleEvolve = (evolutionOption) => {
+    const targetTemplate = creatureTemplates.find(c => c.id === evolutionOption.targetId);
+    
+    Alert.alert(
+      'Evolve Creature',
+      `Grow ${creature.name} into ${targetTemplate.name}?`,
+      [
+        {
+          text: 'No',
+          style: 'cancel'
+        },
+        {
+          text: 'Yes',
+          onPress: () => {
+            const evolvedCreature = evolveCreature(ownedId, evolutionOption);
+            if (evolvedCreature) {
+              // Navigate to evolution success screen
+              navigation.navigate('EvolutionSuccess', { 
+                evolvedCreature 
+              });
+            } else {
+              Alert.alert('Requirements Not Met', 'You need to meet the level and coin requirements to evolve.');
+            }
+          }
+        }
+      ]
+    );
+  };
   
   if (!creature) {
     return (
@@ -22,67 +58,6 @@ const CreatureDetailScreen = ({ route, navigation }) => {
       </View>
     );
   }
-
-  const handleEvolve = (newTemplateId) => {
-    const newTemplate = creatureTemplates.find(c => c.id === newTemplateId);
-    if (!newTemplate) return;
-    
-    Alert.alert(
-      'Evolve Creature',
-      `Grow ${creature.name} into ${newTemplate.name}?`,
-      [
-        {
-          text: 'No',
-          style: 'cancel'
-        },
-        {
-          text: 'Yes',
-          onPress: () => {
-            evolveCreature(ownedId, newTemplateId);
-            // Navigate to evolution reveal screen
-            navigation.navigate('EvolutionReveal', { creature: { ...newTemplate, ownedId } });
-          }
-        }
-      ]
-    );
-  };
-
-  const renderEvolutionOption = (option) => {
-    const newTemplate = creatureTemplates.find(c => c.id === option.id);
-    if (!newTemplate) return null;
-    
-    const levelMet = creature.level >= option.requiredLevel;
-    const coinsMet = coins >= option.coinCost;
-    const canEvolve = levelMet && coinsMet;
-    
-    return (
-      <TouchableOpacity 
-        key={option.id}
-        style={[styles.evolveButton, !canEvolve && styles.disabledButton]}
-        onPress={() => canEvolve && handleEvolve(option.id)}
-        disabled={!canEvolve}
-      >
-        <View style={styles.evolveLeft}>
-          <Image source={newTemplate.image} style={styles.evolveImage} />
-          <Text style={styles.evolveText}>GROW</Text>
-        </View>
-        <View style={styles.evolveRight}>
-          <View style={styles.requirement}>
-            <Text style={styles.requirementLabel}>LVL</Text>
-            <Text style={[styles.requirementValue, !levelMet && styles.requirementUnmet]}>
-              {option.requiredLevel}
-            </Text>
-          </View>
-          <View style={styles.requirement}>
-            <Text style={styles.requirementLabel}>💰</Text>
-            <Text style={[styles.requirementValue, !coinsMet && styles.requirementUnmet]}>
-              {option.coinCost}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  };
 
   return (
     <View style={styles.container}>
@@ -104,11 +79,50 @@ const CreatureDetailScreen = ({ route, navigation }) => {
         />
         
         <Text style={styles.description}>{creature.description}</Text>
-      
-        {creature.growsTo && creature.growsTo.length > 0 && (
-          <View style={styles.evolutionSection}>
-            <Text style={styles.sectionTitle}>Evolution Options</Text>
-            {creature.growsTo.map(renderEvolutionOption)}
+
+        {/* New: Evolution Options */}
+        {creatureTemplate?.growsTo?.length > 0 && (
+          <View style={styles.evolutionContainer}>
+            <Text style={styles.evolutionTitle}>Evolution Options:</Text>
+            {creatureTemplate.growsTo.map((option, index) => {
+              const targetTemplate = creatureTemplates.find(c => c.id === option.targetId);
+              const levelMet = creature.level >= option.requiredLevel;
+              const coinsMet = coins >= option.coinCost;
+              
+              return (
+                <TouchableOpacity 
+                  key={index}
+                  style={styles.evolutionButton}
+                  onPress={() => handleEvolve(option)}
+                  disabled={!levelMet || !coinsMet}
+                >
+                  <View style={styles.evolutionButtonLeft}>
+                    <Image source={targetTemplate.image} style={styles.evolutionImage} />
+                    <Text style={styles.evolutionGrowText}>GROW</Text>
+                  </View>
+                  <View style={styles.evolutionButtonRight}>
+                    <Text style={[
+                      styles.evolutionRequirement,
+                      !levelMet && styles.requirementNotMet
+                    ]}>
+                      LVL {option.requiredLevel}
+                    </Text>
+                    <View style={styles.coinRequirement}>
+                      <Image 
+                        source={require('../assets/coin-icon.png')} // Assuming you have a coin icon
+                        style={styles.coinIcon} 
+                      />
+                      <Text style={[
+                        styles.evolutionRequirement,
+                        !coinsMet && styles.requirementNotMet
+                      ]}>
+                        {option.coinCost}
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
           </View>
         )}
 
@@ -210,63 +224,63 @@ const styles = StyleSheet.create({
   disabledButton: {
     backgroundColor: '#CCCCCC',
   },
-    evolutionSection: {
+  evolutionContainer: {
     marginTop: 20,
+    marginBottom: 20,
   },
-  sectionTitle: {
-    fontSize: 20,
+  evolutionTitle: {
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
   },
-  evolveButton: {
+  evolutionButton: {
     flexDirection: 'row',
     borderRadius: 8,
-    marginBottom: 10,
     overflow: 'hidden',
+    marginBottom: 10,
   },
-  evolveLeft: {
+  evolutionButtonLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#2E7D32', // Darker green
+    backgroundColor: '#388E3C', // Darker green
     padding: 10,
   },
-  evolveImage: {
-    width: 40,
-    height: 40,
-    marginRight: 10,
-  },
-  evolveText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  evolveRight: {
+  evolutionButtonRight: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#4CAF50', // Lighter green
     padding: 10,
   },
-  requirement: {
+  evolutionImage: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+    marginRight: 10,
+  },
+  evolutionGrowText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  evolutionRequirement: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  coinRequirement: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  requirementLabel: {
+  coinIcon: {
+    width: 20,
+    height: 20,
     marginRight: 5,
-    fontWeight: 'bold',
-    color: 'white',
   },
-  requirementValue: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  requirementUnmet: {
-    color: '#F44336',
-  },
-  disabledButton: {
-    opacity: 0.7,
+  requirementNotMet: {
+    color: '#F44336', // Red for unmet requirements
   },
 });
 

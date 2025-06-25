@@ -5,6 +5,7 @@ import TasksScreen from './screens/TasksScreen';
 import CreaturesScreen from './screens/CreaturesScreen';
 import CreatureDetailScreen from './screens/CreatureDetailScreen';
 import CreateTaskScreen from './screens/CreateTaskScreen';
+import EvolutionSuccessScreen from './screens/EvolutionSuccessScreen';
 import { Ionicons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
@@ -15,6 +16,7 @@ const CreaturesStack = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="CreaturesList" component={CreaturesScreen} />
       <Stack.Screen name="CreatureDetail" component={CreatureDetailScreen} />
+      <Stack.Screen name="EvolutionSuccess" component={EvolutionSuccessScreen} />
     </Stack.Navigator>
   );
 };
