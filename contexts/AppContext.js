@@ -86,9 +86,9 @@ export const AppProvider = ({ children }) => {
     const options = [];
     for (let i = 0; i < count; i++) {
       const rarity = getRarity();
-      let candidates = creatureTemplates.filter(c => c.rarity === rarity);
+      let candidates = creatureTemplates.filter(c => (c.rarity === rarity) && c.canPurchase);
       if (candidates.length === 0) {
-        candidates = creatureTemplates.filter(c => c.rarity === 'common');  // Fallback
+        candidates = creatureTemplates.filter(c => (c.rarity === 'common') && c.canPurchase);  // Fallback
       }
       const selected = candidates[Math.floor(Math.random() * candidates.length)];
       if (selected) options.push(selected);

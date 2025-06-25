@@ -5,8 +5,10 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
+    growsTo: [21, 22],
     description: "A friendly starter creature",
     unlocked: true,
+    canPurchase: true,
     rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
@@ -18,6 +20,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "A common creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
@@ -29,6 +32,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "A common creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
@@ -40,6 +44,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "A common creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
@@ -51,6 +56,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "A common creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
@@ -62,6 +68,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "A common creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
@@ -73,6 +80,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "A common creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
@@ -84,6 +92,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "A common creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
@@ -95,6 +104,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "A common creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
@@ -106,6 +116,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "An uncommon creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'uncommon',
     image: require('../assets/creature-placeholder.png')
   },
@@ -117,6 +128,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "An uncommon creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'uncommon',
     image: require('../assets/creature-placeholder.png')
   },
@@ -128,6 +140,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "An uncommon creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'uncommon',
     image: require('../assets/creature-placeholder.png')
   },
@@ -139,6 +152,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "An uncommon creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'uncommon',
     image: require('../assets/creature-placeholder.png')
   },
@@ -150,6 +164,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "An uncommon creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'uncommon',
     image: require('../assets/creature-placeholder.png')
   },
@@ -161,6 +176,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "An uncommon creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'uncommon',
     image: require('../assets/creature-placeholder.png')
   },
@@ -172,6 +188,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "A rare creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'rare',
     image: require('../assets/creature-placeholder.png')
   },
@@ -183,6 +200,7 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "A rare creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'rare',
     image: require('../assets/creature-placeholder.png')
   },
@@ -194,28 +212,31 @@ export const creatures = [
     xpToNextLevel: 10,
     description: "A rare creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'rare',
     image: require('../assets/creature-placeholder.png')
   },
   {
     id: 19,
-    name: "Creature 19",
+    name: "Mister Epic",
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
     description: "A epic creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'epic',
     image: require('../assets/creature-placeholder.png')
   },
   {
     id: 20,
-    name: "Creature 20",
+    name: "Missus Epic",
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
     description: "A epic creature",
     unlocked: false,
+    canPurchase: true,
     rarity: 'epic',
     image: require('../assets/creature-placeholder.png')
   },
@@ -225,8 +246,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A common creature",
+    description: "A common creature, evolved from Creature 1",
     unlocked: false,
+    canPurchase: false,
     rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
@@ -236,8 +258,9 @@ export const creatures = [
     level: 1,
     currentXP: 0,
     xpToNextLevel: 10,
-    description: "A common creature",
+    description: "A common creature, evolved from Creature 1",
     unlocked: false,
+    canPurchase: false,
     rarity: 'common',
     image: require('../assets/creature-placeholder.png')
   },
