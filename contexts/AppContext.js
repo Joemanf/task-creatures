@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { creatures } from '../data/creatures';  // Renamed for clarity as templates
 import { initialTasks } from '../data/tasks';
 

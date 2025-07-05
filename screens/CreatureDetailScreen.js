@@ -4,7 +4,7 @@ import { useAppContext } from '../contexts/AppContext';
 import XPBar from '../components/XPBar';
 
 const CreatureDetailScreen = ({ route, navigation }) => {
-  const { ownedCreatures, selectedCreature, releaseCreature } = useAppContext();
+  const { ownedCreatures, selectedCreature, releaseCreature, setActiveCreature } = useAppContext();
   const { ownedId } = route.params;
   
   const creature = ownedCreatures.find(c => c.ownedId === ownedId);
@@ -88,13 +88,13 @@ const CreatureDetailScreen = ({ route, navigation }) => {
                   navigation.goBack(); 
                   setShowReleaseModal(false); 
                 }} 
-                style={styles.modalButton}
+                style={[styles.modalButton, styles.yesButton]}
               >
                 <Text style={styles.modalButtonText}>Yes</Text>
               </TouchableOpacity>
               <TouchableOpacity 
                 onPress={() => setShowReleaseModal(false)} 
-                style={styles.modalButton}
+                style={[styles.modalButton, styles.noButton]}
               >
                 <Text style={styles.modalButtonText}>No</Text>
               </TouchableOpacity>
@@ -212,19 +212,37 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
   },
-  modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  modalButton: {
-    padding: 10,
-    backgroundColor: '#4CAF50',
-    borderRadius: 5,
-    marginHorizontal: 5,
-  },
+  // modalButtons: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-around',
+  // },
+  // modalButton: {
+  //   padding: 10,
+  //   backgroundColor: '#4CAF50',
+  //   borderRadius: 5,
+  //   marginHorizontal: 5,
+  // },
   modalButtonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  noButton: {
+    backgroundColor: '#CCCCCC',
+  },
+  yesButton: {
+    backgroundColor: '#F44336',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    marginHorizontal: 5,
+    alignItems: 'center',
   },
 });
 
