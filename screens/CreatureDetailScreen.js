@@ -1,13 +1,14 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { useAppContext } from '../contexts/AppContext';
 import XPBar from '../components/XPBar';
 
 const CreatureDetailScreen = ({ route, navigation }) => {
-  const { ownedCreatures, selectedCreature, setActiveCreature } = useAppContext();
+  const { ownedCreatures, selectedCreature, releaseCreature } = useAppContext();
   const { ownedId } = route.params;
   
   const creature = ownedCreatures.find(c => c.ownedId === ownedId);
+  const [showReleaseModal, setShowReleaseModal] = useState(false);
 
   const setActive = () => {
     setActiveCreature(ownedId);
@@ -57,6 +58,15 @@ const CreatureDetailScreen = ({ route, navigation }) => {
         >
           <Text style={styles.buttonText}>Switch to Active</Text>
         </TouchableOpacity>
+
+        {/* New: Release Creature Button */}
+        <TouchableOpacity
+          style={[styles.button, styles.releaseButton, (creature.ownedId === selectedCreature || ownedCreatures.length === 1) && styles.disabledButton]}
+          onPress={() => setShowReleaseModal(true)}
+          disabled={creature.ownedId === selectedCreature || ownedCreatures.length === 1}
+        >
+          <Text style={styles.buttonText}>Release Creature</Text>
+        </TouchableOpacity>
       </ScrollView>
       
       <TouchableOpacity 
@@ -65,6 +75,33 @@ const CreatureDetailScreen = ({ route, navigation }) => {
       >
         <Text style={styles.closeButtonText}>✕</Text>
       </TouchableOpacity>
+
+      {/* New: Release Confirmation Modal */}
+      {showReleaseModal && (
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>You are about to release {creature.name}. Are you sure? This decision cannot be reversed.</Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity 
+                onPress={() => { 
+                  releaseCreature(creature.ownedId); 
+                  navigation.goBack(); 
+                  setShowReleaseModal(false); 
+                }} 
+                style={styles.modalButton}
+              >
+                <Text style={styles.modalButtonText}>Yes</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                onPress={() => setShowReleaseModal(false)} 
+                style={styles.modalButton}
+              >
+                <Text style={styles.modalButtonText}>No</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -136,9 +173,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     marginHorizontal: 5,
+    marginVertical: 5,
   },
   createButton: {
     backgroundColor: '#4CAF50',
+  },
+  releaseButton: {
+    backgroundColor: '#F44336',
   },
   buttonText: {
     color: 'white',
@@ -147,6 +188,43 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     backgroundColor: '#CCCCCC',
+  },
+  // New styles for modal
+  modalOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  modalButton: {
+    padding: 10,
+    backgroundColor: '#4CAF50',
+    borderRadius: 5,
+    marginHorizontal: 5,
+  },
+  modalButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
 

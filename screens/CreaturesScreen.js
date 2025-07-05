@@ -5,7 +5,7 @@ import CreatureCard from '../components/CreatureCard';
 import CreatureSelectionModal from '../components/CreatureSelectionModal';  // New import for modal
 
 const CreaturesScreen = ({ navigation }) => {
-  const { ownedCreatures, coins, unlockNewCreature, getRandomCreatureOptions } = useAppContext();  // Updated: Use ownedCreatures and new functions
+  const { ownedCreatures, coins, unlockNewCreature, getRandomCreatureOptions, showCoinGain } = useAppContext();  // Updated: Use ownedCreatures and new functions
   const [showUnlockModal, setShowUnlockModal] = useState(false);  // New: For new unlock modal
   const [creatureOptions, setCreatureOptions] = useState([]);    // New: Holds 3 random options
   
@@ -28,6 +28,13 @@ const CreaturesScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.coins}>Coins: {coins}</Text>
+      
+      {/* New: Coin Gain Animation */}
+      {showCoinGain && (
+        <View style={styles.coinGain}>
+          <Text style={styles.coinGainText}>+1</Text>
+        </View>
+      )}
       
       <TouchableOpacity
         style={[styles.unlockButton, coins < 10 && styles.disabledButton]}
@@ -78,6 +85,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginVertical: 10,
+  },
+  // New styles for coin gain animation
+  coinGain: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    backgroundColor: 'gold',
+    padding: 5,
+    borderRadius: 5,
+  },
+  coinGainText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
   listContent: {
     alignItems: 'center',

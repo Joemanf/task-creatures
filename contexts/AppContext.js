@@ -17,6 +17,15 @@ export const AppProvider = ({ children }) => {
   const [tasks, setTasks] = useState(initialTasks);
   const [coins, setCoins] = useState(10);
   const [selectedCreature, setSelectedCreature] = useState(1);  // Updated: Now references ownedId (starts with first owned)
+  const [showCoinGain, setShowCoinGain] = useState(false);  // New: For coin gain animation
+
+  useEffect(() => {
+    let timer;
+    if (showCoinGain) {
+      timer = setTimeout(() => setShowCoinGain(false), 2000);
+    }
+    return () => clearTimeout(timer);
+  }, [showCoinGain]);
 
   const addXP = (ownedId, xp) => {  // Updated: Use ownedId instead of template ID
     setOwnedCreatures(prevOwned => {
@@ -142,6 +151,18 @@ export const AppProvider = ({ children }) => {
     ]);
   };
 
+  // New: Function to release a creature and earn a coin
+  const releaseCreature = (ownedId) => {
+    const creature = ownedCreatures.find(c => c.ownedId === ownedId);
+    if (!creature || creature.ownedId === selectedCreature || ownedCreatures.length === 1) {
+      console.log('Cannot release active creature or only creature');
+      return;
+    }
+    setCoins(coins + 1);
+    setShowCoinGain(true);
+    setOwnedCreatures(prev => prev.filter(c => c.ownedId !== ownedId));
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -155,7 +176,9 @@ export const AppProvider = ({ children }) => {
         unlockNewCreature,  // New
         setActiveCreature,
         getRandomCreatureOptions,  // New
-        createTask
+        createTask,
+        releaseCreature,  // New
+        showCoinGain  // New
       }}
     >
       {children}
