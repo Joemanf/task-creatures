@@ -142,20 +142,35 @@ export const AppProvider = ({ children }) => {
     ]);
   };
 
+  // New: Function to release a creature
+  const releaseCreature = (ownedId) => {
+    // Don't allow releasing if it's the active creature or only one creature left
+    if (selectedCreature === ownedId || ownedCreatures.length <= 1) {
+      return false;
+    }
+    
+    setOwnedCreatures(prevOwned => 
+      prevOwned.filter(creature => creature.ownedId !== ownedId)
+    );
+    setCoins(prevCoins => prevCoins + 1);
+    return true;
+  };
+
   return (
     <AppContext.Provider
       value={{
-        creatureTemplates,  // Expose templates if needed elsewhere
-        ownedCreatures,     // New: Expose owned creatures
+        creatureTemplates,
+        ownedCreatures,
         tasks,
         coins,
-        selectedCreature,   // Updated: ownedId
+        selectedCreature,
         setSelectedCreature,
         completeTask,
-        unlockNewCreature,  // New
+        unlockNewCreature,
         setActiveCreature,
-        getRandomCreatureOptions,  // New
-        createTask
+        getRandomCreatureOptions,
+        createTask,
+        releaseCreature  // New
       }}
     >
       {children}
