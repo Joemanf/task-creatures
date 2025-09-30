@@ -33,6 +33,7 @@ const TasksScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.creatureContainer}>
+        <Text style={styles.nameText}>{creature.name}</Text>
         <Text style={styles.levelText}>Lvl {creature.level}</Text>
         <Image source={creature.image} style={styles.creatureImage} />
         <XPBar currentXP={creature.currentXP} xpToNextLevel={creature.xpToNextLevel} />
@@ -105,10 +106,18 @@ const styles = StyleSheet.create({
     zIndex: 1,
     marginTop: 40,
   },
-  levelText: {
+  nameText: {
     position: 'absolute',
     top: 10,
     left: 10,
+    fontSize: 18,
+    fontWeight: 'bold',
+    zIndex: 2,
+  },
+  levelText: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
     fontSize: 18,
     fontWeight: 'bold',
     zIndex: 2,
