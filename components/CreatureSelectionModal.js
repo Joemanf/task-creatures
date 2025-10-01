@@ -5,6 +5,7 @@ import CreatureCard from './CreatureCard';
 const CreatureSelectionModal = ({ visible, creatureOptions, onConfirm, onClose }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [selected, setSelected] = useState('');
+  const [selectedVis, setSelectedVis] = useState('');
 
   useEffect(() => {
     if (visible) {
@@ -16,20 +17,23 @@ const CreatureSelectionModal = ({ visible, creatureOptions, onConfirm, onClose }
     }
   }, [visible]);
 
-  function onSelect(id) {
+  function onSelect(id, vid) {
     setSelected(id);
+    setSelectedVis(vid);
   };
 
   function confirmPress() {
     if (selected) {
-      onConfirm(selected)
-      setSelected('')
+      onConfirm(selected);
+      setSelected('');
+      setSelectedVis('');
     }
   }
 
   function closeAndClear() {
-    setSelected('')
-    onClose()
+    setSelected('');
+    setSelectedVis('');
+    onClose();
   }
 
   return (
@@ -54,9 +58,9 @@ const CreatureSelectionModal = ({ visible, creatureOptions, onConfirm, onClose }
                   renderItem={({ item }) => (
                     <TouchableOpacity 
                       onPress={() => {}}
-                      style={selected === item.selectId ? styles.outline : ''}
+                      style={selectedVis === item.selectId ? styles.outline : ''}
                     >
-                      <CreatureCard creature={item} onPress={() => {onSelect(item.id)}} />
+                      <CreatureCard creature={item} onPress={() => {onSelect(item.id, item.selectId)}} />
                     </TouchableOpacity>
                   )}
                   style={styles.list}
