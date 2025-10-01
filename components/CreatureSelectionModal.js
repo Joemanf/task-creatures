@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Modal, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
 import CreatureCard from './CreatureCard';
 
-const CreatureSelectionModal = ({ visible, creatureOptions, onSelect, onClose }) => {
+const CreatureSelectionModal = ({ visible, creatureOptions, onConfirm, onClose }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [selected, setSelected] = useState('');
 
   useEffect(() => {
     if (visible) {
@@ -14,6 +15,22 @@ const CreatureSelectionModal = ({ visible, creatureOptions, onSelect, onClose })
       return () => clearTimeout(timer);
     }
   }, [visible]);
+
+  function onSelect(id) {
+    setSelected(id);
+  };
+
+  function confirmPress() {
+    if (selected) {
+      onConfirm(selected)
+      setSelected('')
+    }
+  }
+
+  function closeAndClear() {
+    setSelected('')
+    onClose()
+  }
 
   return (
     <Modal visible={visible} transparent animationType="fade">
@@ -32,19 +49,27 @@ const CreatureSelectionModal = ({ visible, creatureOptions, onSelect, onClose })
               ) : (
                 <FlatList
                   data={creatureOptions}
-                  keyExtractor={(item) => item.id.toString()}
+                  keyExtractor={(item) => item.selectId.toString()}
                   horizontal
                   renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => {}}>
-                      <CreatureCard creature={item} onPress={() => {onSelect(item.id)}} />
+                    <TouchableOpacity 
+                      onPress={() => {}}
+                      style={selected === item.selectId ? styles.outline : ''}
+                    >
+                      <CreatureCard creature={item} onPress={() => {onSelect(item.selectId)}} />
                     </TouchableOpacity>
                   )}
                   style={styles.list}
                 />
               )}
-              <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableOpacity>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity style={selected ? styles.createButton : styles.closeButton} onPress={confirmPress}>
+                  <Text style={styles.buttonText}>Confirm</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.closeButton} onPress={closeAndClear}>
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
             </>
           )}
         </View>
@@ -80,8 +105,24 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
   },
+  outline: {
+    borderWidth: 2,
+    borderColor: '#c0e63aff',
+  },
   list: {
     marginBottom: 20,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    width: '55%'
+  },
+  createButton: {
+    backgroundColor: '#4CAF50',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
   },
   closeButton: {
     backgroundColor: '#9E9E9E',

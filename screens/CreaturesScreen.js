@@ -18,7 +18,17 @@ const CreaturesScreen = ({ navigation }) => {
   const handleUnlockPress = () => {
     if (coins >= 10) {
       const options = getRandomCreatureOptions();
-      setCreatureOptions(options);
+      const optionsArr = []
+      for (let i = 0; i < options.length; i++) {
+        const el = options[i]
+        let innerStr = JSON.stringify(el)
+        innerStr = innerStr.slice(0, -1)
+        innerStr += `, "selectId": ${i+1} }`
+        const option = JSON.parse(innerStr)
+        console.log('OPTION:', option)
+        optionsArr.push(option)
+      }
+      setCreatureOptions(optionsArr);
       setShowUnlockModal(true);
     } else {
       console.log('Error: Not enough coins!')
@@ -64,7 +74,7 @@ const CreaturesScreen = ({ navigation }) => {
       <CreatureSelectionModal
         visible={showUnlockModal}
         creatureOptions={creatureOptions}
-        onSelect={(templateId) => {
+        onConfirm={(templateId) => {
           unlockNewCreature(templateId);
           setShowUnlockModal(false);
         }}
