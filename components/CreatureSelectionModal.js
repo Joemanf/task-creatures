@@ -56,7 +56,7 @@ const CreatureSelectionModal = ({ visible, creatureOptions, onConfirm, onClose }
                       onPress={() => {}}
                       style={selected === item.selectId ? styles.outline : ''}
                     >
-                      <CreatureCard creature={item} onPress={() => {onSelect(item.selectId)}} />
+                      <CreatureCard creature={item} onPress={() => {onSelect(item.id)}} />
                     </TouchableOpacity>
                   )}
                   style={styles.list}
