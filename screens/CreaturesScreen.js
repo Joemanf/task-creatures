@@ -25,7 +25,6 @@ const CreaturesScreen = ({ navigation }) => {
         innerStr = innerStr.slice(0, -1)
         innerStr += `, "selectId": ${i+1} }`
         const option = JSON.parse(innerStr)
-        console.log('OPTION:', option)
         optionsArr.push(option)
       }
       setCreatureOptions(optionsArr);
